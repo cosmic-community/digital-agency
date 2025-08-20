@@ -9,8 +9,8 @@ async function getServices(): Promise<Service[]> {
       .props(['id', 'title', 'slug', 'metadata'])
       .depth(1)
     
-    // Sort by display_order with proper null checks
-    return objects.sort((a, b) => {
+    // Sort by display_order with proper null checks and explicit typing
+    return objects.sort((a: Service, b: Service) => {
       const aOrder = a.metadata?.display_order ?? 999
       const bOrder = b.metadata?.display_order ?? 999
       return aOrder - bOrder
