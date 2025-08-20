@@ -11,16 +11,16 @@ export default function ServiceCard({ service, className = '' }: ServiceCardProp
   const { metadata } = service
 
   return (
-    <div className={`card group ${className}`}>
+    <div className={`card group hover:shadow-lg transition-all duration-300 ${className}`}>
       {/* Featured Image */}
       {metadata?.featured_image?.imgix_url && (
-        <div className="aspect-video overflow-hidden">
+        <div className="aspect-video overflow-hidden rounded-t-lg">
           <img
             src={`${metadata.featured_image.imgix_url}?w=600&h=400&fit=crop&auto=format,compress`}
             alt={metadata.service_name || 'Service'}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            width={300}
-            height={200}
+            width={600}
+            height={400}
           />
         </div>
       )}
@@ -29,7 +29,7 @@ export default function ServiceCard({ service, className = '' }: ServiceCardProp
         {/* Service Icon & Name */}
         <div className="flex items-center space-x-3">
           {metadata?.service_icon && (
-            <span className="text-2xl">{metadata.service_icon}</span>
+            <span className="text-3xl">{metadata.service_icon}</span>
           )}
           <h3 className="heading-4 text-gray-900">
             {metadata?.service_name || 'Service'}
@@ -37,16 +37,16 @@ export default function ServiceCard({ service, className = '' }: ServiceCardProp
         </div>
 
         {/* Description */}
-        <p className="body-text">
+        <p className="body-text text-gray-600">
           {metadata?.short_description || 'No description available.'}
         </p>
 
         {/* Key Features */}
         {metadata?.key_features && Array.isArray(metadata.key_features) && metadata.key_features.length > 0 && (
-          <ul className="space-y-1">
+          <ul className="space-y-2">
             {metadata.key_features.slice(0, 3).map((feature, index) => (
               <li key={index} className="text-sm text-gray-600 flex items-center">
-                <span className="w-1.5 h-1.5 bg-primary-500 rounded-full mr-2 flex-shrink-0"></span>
+                <span className="w-1.5 h-1.5 bg-primary-500 rounded-full mr-3 flex-shrink-0"></span>
                 {feature}
               </li>
             ))}
@@ -54,13 +54,15 @@ export default function ServiceCard({ service, className = '' }: ServiceCardProp
         )}
 
         {/* Learn More Link */}
-        <Link 
-          href={`/services/${service.slug}`}
-          className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors group"
-        >
-          Learn More
-          <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-        </Link>
+        <div className="pt-2">
+          <Link 
+            href={`/services/${service.slug}`}
+            className="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium transition-colors group/link"
+          >
+            Learn More
+            <ArrowRight size={16} className="ml-2 group-hover/link:translate-x-1 transition-transform" />
+          </Link>
+        </div>
       </div>
     </div>
   )
