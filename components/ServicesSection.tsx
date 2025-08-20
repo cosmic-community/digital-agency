@@ -2,6 +2,7 @@ import { getAllServices } from '@/lib/cosmic'
 import ServiceCard from '@/components/ServiceCard'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { Service } from '@/types'
 
 export default async function ServicesSection() {
   const services = await getAllServices()
@@ -20,7 +21,7 @@ export default async function ServicesSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {services.map((service) => (
+          {services.map((service: Service) => (
             <ServiceCard 
               key={service.id} 
               service={service}

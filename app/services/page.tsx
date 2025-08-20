@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import { getAllServices } from '@/lib/cosmic'
 import ServiceCard from '@/components/ServiceCard'
+import { Service } from '@/types'
 
 export const metadata: Metadata = {
   title: 'Our Services | Digital Agency',
@@ -27,7 +28,7 @@ export default async function ServicesPage() {
         {/* Services Grid */}
         {services.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service) => (
+            {services.map((service: Service) => (
               <ServiceCard 
                 key={service.id} 
                 service={service}

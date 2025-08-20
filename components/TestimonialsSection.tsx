@@ -1,5 +1,6 @@
 import { getFeaturedTestimonials } from '@/lib/cosmic'
 import TestimonialCard from '@/components/TestimonialCard'
+import { Testimonial } from '@/types'
 
 export default async function TestimonialsSection() {
   const testimonials = await getFeaturedTestimonials()
@@ -22,7 +23,7 @@ export default async function TestimonialsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {testimonials.map((testimonial) => (
+          {testimonials.map((testimonial: Testimonial) => (
             <TestimonialCard 
               key={testimonial.id} 
               testimonial={testimonial}

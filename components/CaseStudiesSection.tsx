@@ -2,6 +2,7 @@ import { getFeaturedCaseStudies } from '@/lib/cosmic'
 import CaseStudyCard from '@/components/CaseStudyCard'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { CaseStudy } from '@/types'
 
 export default async function CaseStudiesSection() {
   const caseStudies = await getFeaturedCaseStudies()
@@ -24,7 +25,7 @@ export default async function CaseStudiesSection() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {caseStudies.map((caseStudy) => (
+          {caseStudies.map((caseStudy: CaseStudy) => (
             <CaseStudyCard 
               key={caseStudy.id} 
               caseStudy={caseStudy}
