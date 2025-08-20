@@ -1,44 +1,46 @@
-import { getFeaturedCaseStudies } from '@/lib/cosmic'
-import CaseStudyCard from '@/components/CaseStudyCard'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { cosmic } from '@/lib/cosmic'
+import CaseStudyCard from './CaseStudyCard'
 import { CaseStudy } from '@/types'
 
-export default async function CaseStudiesSection() {
-  const caseStudies = await getFeaturedCaseStudies()
+async function getCaseStudies(): Promise<CaseStudy[]> {
+  try {
+    const { objects } = await cosmic.objects
+      .find({ 
+        type: 'case-studies',
+        'metadata.featured': true 
+      })
+      .props(['id', 'title', 'slug', 'metadata'])
+      .depth(1)
+      .limit(4)
+    
+    return objects || []
+  } catch (error) {
+    console.error('Error fetching case studies:', error)
+    return []
+  }
+}
 
-  if (caseStudies.length === 0) {
+export default async function CaseStudiesSection() {
+  const caseStudies = await getCaseStudies()
+
+  if (!caseStudies.length) {
     return null
   }
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding">
       <div className="container">
-        <div className="text-center space-y-4 mb-16">
-          <h2 className="heading-2 text-gray-900">
-            Success Stories
-          </h2>
-          <p className="body-large max-w-3xl mx-auto">
-            Explore our recent projects and see how we've helped businesses 
-            achieve their digital goals with measurable results.
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Case Studies</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Explore how we've helped businesses achieve their goals through strategic digital solutions.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          {caseStudies.map((caseStudy: CaseStudy) => (
-            <CaseStudyCard 
-              key={caseStudy.id} 
-              caseStudy={caseStudy}
-              className="animate-fade-in"
-            />
+        
+        <div className="grid md:grid-cols-2 gap-8">
+          {caseStudies.map((caseStudy) => (
+            <CaseStudyCard key={caseStudy.id} caseStudy={caseStudy} />
           ))}
-        </div>
-
-        <div className="text-center">
-          <Link href="/case-studies" className="button-secondary group">
-            View All Case Studies
-            <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
         </div>
       </div>
     </section>

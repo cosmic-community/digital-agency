@@ -1,56 +1,48 @@
-import { getAllServices } from '@/lib/cosmic'
-import ServiceCard from '@/components/ServiceCard'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { cosmic } from '@/lib/cosmic'
+import ServiceCard from './ServiceCard'
 import { Service } from '@/types'
 
-export default async function ServicesSection() {
-  const services = await getAllServices()
+async function getServices(): Promise<Service[]> {
+  try {
+    const { objects } = await cosmic.objects
+      .find({ type: 'services' })
+      .props(['id', 'title', 'slug', 'metadata'])
+      .depth(1)
+    
+    // Sort by display_order with proper null checks
+    return objects.sort((a, b) => {
+      const aOrder = a.metadata?.display_order ?? 999
+      const bOrder = b.metadata?.display_order ?? 999
+      return aOrder - bOrder
+    })
+  } catch (error) {
+    console.error('Error fetching services:', error)
+    return []
+  }
+}
 
-  // Sort services by display_order if available
-  const sortedServices = services.sort((a: Service, b: Service) => {
-    const orderA = a.metadata.display_order || 999
-    const orderB = b.metadata.display_order || 999
-    return orderA - orderB
-  })
+export default async function ServicesSection() {
+  const services = await getServices()
+
+  if (!services.length) {
+    return null
+  }
 
   return (
-    <section className="section-padding bg-white">
+    <section className="section-padding">
       <div className="container">
-        <div className="text-center space-y-4 mb-16">
-          <h2 className="heading-2 text-gray-900">
-            Our Services
-          </h2>
-          <p className="body-large max-w-3xl mx-auto text-gray-600">
-            We offer comprehensive digital solutions to help your business thrive online. 
-            From custom web development to strategic marketing campaigns.
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Our Services</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            We provide comprehensive digital solutions that help businesses grow and succeed in the modern marketplace.
           </p>
         </div>
-
-        {sortedServices.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {sortedServices.map((service: Service) => (
-                <ServiceCard 
-                  key={service.id} 
-                  service={service}
-                  className="animate-fade-in"
-                />
-              ))}
-            </div>
-
-            <div className="text-center">
-              <Link href="/services" className="button-secondary group">
-                View All Services
-                <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </>
-        ) : (
-          <div className="text-center py-16">
-            <p className="text-gray-500">No services available at the moment.</p>
-          </div>
-        )}
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service) => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
+        </div>
       </div>
     </section>
   )
