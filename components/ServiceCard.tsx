@@ -13,11 +13,11 @@ export default function ServiceCard({ service, className = '' }: ServiceCardProp
   return (
     <div className={`card group ${className}`}>
       {/* Featured Image */}
-      {metadata.featured_image && (
+      {metadata?.featured_image?.imgix_url && (
         <div className="aspect-video overflow-hidden">
           <img
             src={`${metadata.featured_image.imgix_url}?w=600&h=400&fit=crop&auto=format,compress`}
-            alt={metadata.service_name}
+            alt={metadata.service_name || 'Service'}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             width={300}
             height={200}
@@ -28,21 +28,21 @@ export default function ServiceCard({ service, className = '' }: ServiceCardProp
       <div className="p-6 space-y-4">
         {/* Service Icon & Name */}
         <div className="flex items-center space-x-3">
-          {metadata.service_icon && (
+          {metadata?.service_icon && (
             <span className="text-2xl">{metadata.service_icon}</span>
           )}
           <h3 className="heading-4 text-gray-900">
-            {metadata.service_name}
+            {metadata?.service_name || 'Service'}
           </h3>
         </div>
 
         {/* Description */}
         <p className="body-text">
-          {metadata.short_description}
+          {metadata?.short_description || 'No description available.'}
         </p>
 
         {/* Key Features */}
-        {metadata.key_features && metadata.key_features.length > 0 && (
+        {metadata?.key_features && Array.isArray(metadata.key_features) && metadata.key_features.length > 0 && (
           <ul className="space-y-1">
             {metadata.key_features.slice(0, 3).map((feature, index) => (
               <li key={index} className="text-sm text-gray-600 flex items-center">
